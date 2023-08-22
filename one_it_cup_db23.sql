@@ -43,7 +43,6 @@ BEGIN
             insert into actions.ship_moves(ship, destination) values (sh.id, rows.to_island);
             insert into actions.offers(contractor, quantity) values(rows.contractor, sh.quantity);
             update world.contractors set quantity = quantity - sh.quantity where id = rows.contractor;
-
         else
             if sh.is_move > 0 then
                 select a.item, a.contractor, a.quantity as q, b.quantity, least(a.quantity, b.quantity) as quan into rows from traffic a 
