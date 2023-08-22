@@ -40,15 +40,6 @@ BEGIN
             insert into actions.transfers values(sh.id, sh.item, sh.quantity, 'unload');
         elsif sh.quantity > 0 then
             select to_island, contractor into rows from traffic where ship = sh.id limit 1;
-            if rows.to_island is null then
-                select a.id as contractor, a.island as to_island,
-                    least(sh.quantity, a.quantity)*a.price_per_unit / ((1 + sh.quantity + least(abs(sh.x - m.x), 1000-abs(sh.x - m.x)) + least(abs(sh.y - m.y), 1000-abs(sh.y - m.y)))/sh.speed) as q
-                    into rows from world.contractors a
-                    join world.islands m on m.id = a.island
-                    where a.item = sh.item and a.type = 'customer'
-                    order by q desc;
-            end if;
-
             insert into actions.ship_moves(ship, destination) values (sh.id, rows.to_island);
             insert into actions.offers(contractor, quantity) values(rows.contractor, sh.quantity);
             update world.contractors set quantity = quantity - sh.quantity where id = rows.contractor;
