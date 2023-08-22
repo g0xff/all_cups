@@ -22,7 +22,6 @@ BEGIN
         loop
             if rows.sale_quan > 300 or rows.price_per_unit > 31 or currentTime > 80000 then
                 insert into actions.offers(contractor, quantity) values(rows.id, rows.quan);
-                update world.contractors set quantity = quantity - rows.quan where id = rows.id;
             end if;
         end loop;
     end if;
